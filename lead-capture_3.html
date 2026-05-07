@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="New Lead">
+<title>New Lead</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a18;
+    --paper: #f5f2eb;
+    --warm: #c8a96e;
+    --warm-light: #e8dfc8;
+    --muted: #888880;
+    --field-bg: #edeae0;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding: env(safe-area-inset-top, 20px) 0 env(safe-area-inset-bottom, 20px);
+  }
+
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+  }
+
+  header {
+    padding: 28px 0 24px;
+    border-bottom: 1px solid var(--warm-light);
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 6px;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--warm);
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 28px 0 12px;
+  }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    background: var(--field-bg);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #b0ad9f;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--warm);
+    background: #fff;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+
+  textarea {
+    resize: none;
+    height: 90px;
+    line-height: 1.5;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .source-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .source-btn {
+    background: var(--field-bg);
+    border: 1.5px solid transparent;
+    border-radius: var(--radius);
+    padding: 14px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.18s;
+    -webkit-appearance: none;
+  }
+
+  .source-btn.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .source-btn:not(.active):active {
+    background: var(--warm-light);
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 32px;
+    padding: 18px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .submit-btn:active {
+    background: #333;
+    transform: scale(0.98);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* SUCCESS STATE */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .success-screen.show { display: flex; }
+
+  .check-circle {
+    width: 72px;
+    height: 72px;
+    background: var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .check-circle svg { stroke: var(--paper); }
+
+  .success-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-style: italic;
+    color: var(--warm);
+    margin-bottom: 8px;
+  }
+
+  .success-msg {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 260px;
+  }
+
+  .add-another {
+    margin-top: 40px;
+    padding: 14px 32px;
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  /* SETUP BANNER */
+  .setup-banner {
+    background: var(--warm-light);
+    border: 1.5px solid var(--warm);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #6b5a2e;
+    line-height: 1.5;
+  }
+
+  .setup-banner strong { font-weight: 600; }
+  .setup-banner a { color: var(--ink); font-weight: 500; }
+
+  .form-screen { display: block; }
+  .form-screen.hide { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SETUP BANNER — remove once your script URL is in place -->
+  <div class="setup-banner" id="setupBanner">
+    <strong>One-time setup needed.</strong> See instructions below to connect this form to your Lead Tracker sheet. Once done, remove this banner.
+  </div>
+
+  <!-- FORM -->
+  <div class="form-screen" id="formScreen">
+    <header>
+      <div class="eyebrow">Coldwell Banker · Mill Valley</div>
+      <h1>New <em>Lead</em></h1>
+    </header>
+
+    <div class="section-label">Contact</div>
+
+    <div class="row-2">
+      <div class="field">
+        <label>First Name *</label>
+        <input type="text" id="firstName" placeholder="Alex" autocomplete="given-name" autocapitalize="words">
+      </div>
+      <div class="field">
+        <label>Last Name</label>
+        <input type="text" id="lastName" placeholder="Kim" autocomplete="family-name" autocapitalize="words">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Phone</label>
+      <input type="tel" id="phone" placeholder="(415) 000-0000" autocomplete="tel">
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="alex@email.com" autocomplete="email" autocapitalize="none">
+    </div>
+
+    <div class="section-label">Context</div>
+
+    <div class="field">
+      <label>Source</label>
+      <div class="source-grid">
+        <button class="source-btn" onclick="setSource(this, 'Open House')">🏡 Open House</button>
+        <button class="source-btn" onclick="setSource(this, 'Friend / Referral')">🤝 Friend / Referral</button>
+        <button class="source-btn" onclick="setSource(this, 'Social Media')">📱 Social</button>
+        <button class="source-btn" onclick="setSource(this, 'Other')">✦ Other</button>
+      </div>
+      <input type="hidden" id="source">
+    </div>
+
+    <div class="field">
+      <label>Where You Met</label>
+      <input type="text" id="whereMet" placeholder="e.g. 42 Sycamore Ave open house" autocapitalize="sentences">
+    </div>
+
+    <div class="section-label">Property</div>
+
+    <div class="field">
+      <label>Looking to…</label>
+      <select id="dealStage">
+        <option value="">Select</option>
+        <option>Buy</option>
+        <option>Sell</option>
+        <option>Buy + Sell</option>
+        <option>Just browsing</option>
+        <option>Investor</option>
+      </select>
+    </div>
+
+    <div class="row-2">
+      <div class="field">
+        <label>Property Type</label>
+        <select id="propertyInterest">
+          <option value="">Type</option>
+          <option>Single Family</option>
+          <option>Condo / TIC</option>
+          <option>Multi-Family</option>
+          <option>Land</option>
+          <option>Luxury</option>
+          <option>Any</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Budget</label>
+        <select id="budget">
+          <option value="">Range</option>
+          <option>Under $1M</option>
+          <option>$1M – $2M</option>
+          <option>$2M – $3M</option>
+          <option>$3M – $5M</option>
+          <option>$5M+</option>
+          <option>Unknown</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Referred By</label>
+      <input type="text" id="referredBy" placeholder="Name of referrer (if any)" autocapitalize="words">
+    </div>
+
+    <div class="section-label">Notes</div>
+
+    <div class="field">
+      <textarea id="notes" placeholder="Anything worth remembering — timeline, motivation, kids, dogs, deal-breakers…"></textarea>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitLead()">Save Lead →</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="check-circle">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6,16 13,23 26,10"/>
+      </svg>
+    </div>
+    <div class="success-name" id="successName">Lead saved.</div>
+    <div class="success-msg">Added to your Lead Tracker. Zapier will handle the follow-up.</div>
+    <button class="add-another" onclick="resetForm()">+ Add Another</button>
+  </div>
+
+</div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJ2VPDen3mxmcNS_9ej-Xo5g5RkeoAvRtwhi59BwQsmHcoX3UNDGcySoTksiGdJPFO/exec';
+
+  let selectedSource = '';
+
+  function setSource(btn, value) {
+    document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedSource = value;
+    document.getElementById('source').value = value;
+  }
+
+  function today() {
+    return new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function followUpDate() {
+    const d = new Date();
+    d.setDate(d.getDate() + 3);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  async function submitLead() {
+    const firstName = document.getElementById('firstName').value.trim();
+    if (!firstName) {
+      document.getElementById('firstName').focus();
+      document.getElementById('firstName').style.borderColor = '#c0392b';
+      setTimeout(() => document.getElementById('firstName').style.borderColor = '', 1500);
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const data = {
+      'First Name': firstName,
+      'Last Name': document.getElementById('lastName').value.trim(),
+      'Phone': document.getElementById('phone').value.trim(),
+      'Email': document.getElementById('email').value.trim(),
+      'Source': selectedSource,
+      'Where We Met': document.getElementById('whereMet').value.trim(),
+      'Notes': document.getElementById('notes').value.trim(),
+      'Date Added': today(),
+      'Follow-Up Date': followUpDate(),
+      'Status': 'New',
+      'Last Contact': '',
+      'Deal Stage': document.getElementById('dealStage').value,
+      'Property Interest': document.getElementById('propertyInterest').value,
+      'Budget': document.getElementById('budget').value,
+      'Referred By': document.getElementById('referredBy').value.trim(),
+    };
+
+    if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+      // Demo mode — just show success without actually submitting
+      showSuccess(firstName);
+      return;
+    }
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      showSuccess(firstName);
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Save Lead →';
+      alert('Connection error. Check your internet and try again.');
+    }
+  }
+
+  function showSuccess(name) {
+    document.getElementById('formScreen').classList.add('hide');
+    document.getElementById('successName').textContent = name + ' is in.';
+    document.getElementById('successScreen').classList.add('show');
+    document.getElementById('setupBanner').style.display = 'none';
+  }
+
+  function resetForm() {
+    document.getElementById('successScreen').classList.remove('show');
+    document.getElementById('formScreen').classList.remove('hide');
+    document.querySelectorAll('input:not([type=hidden]), textarea').forEach(el => el.value = '');
+    document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+    document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
+    selectedSource = '';
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('submitBtn').textContent = 'Save Lead →';
+    window.scrollTo(0, 0);
+  }
+</script>
+
+<!-- 
+═══════════════════════════════════════════════
+SETUP INSTRUCTIONS (one-time, ~10 minutes)
+═══════════════════════════════════════════════
+
+STEP 1 — Create the Google Apps Script
+
+1. Open your Lead Tracker sheet:
+   https://docs.google.com/spreadsheets/d/1LI2y94UilVYbg1Cm5ePTWKWzkeeNJmkl1Qwm1flr3Xk
+
+2. Click Extensions → Apps Script
+
+3. Delete all existing code and paste this:
+
+─────────────────────────────────────────────
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var row = headers.map(function(h) { return data[h] || ''; });
+  sheet.appendRow(row);
+  return ContentService.createTextOutput('OK');
+}
+─────────────────────────────────────────────
+
+4. Click Save (floppy disk icon), name it "Lead Receiver"
+
+5. Click Deploy → New Deployment
+   - Type: Web App
+   - Execute as: Me
+   - Who has access: Anyone
+   - Click Deploy
+
+6. Copy the Web App URL it gives you
+
+STEP 2 — Paste URL into this file
+
+Find this line in the HTML above:
+   const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+Replace with your URL:
+   const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_ID/exec';
+
+STEP 3 — Host the file (pick one)
+
+Option A — GitHub Pages (free, best):
+  Upload this file to a GitHub repo → enable Pages → get a URL
+
+Option B — Google Drive (simplest):
+  Upload this file to Drive → open it → copy the URL
+
+STEP 4 — Add to iPhone Home Screen
+
+1. Open the URL in Safari
+2. Tap Share → Add to Home Screen
+3. Name it "New Lead"
+4. Done. One tap from your home screen.
+
+═══════════════════════════════════════════════
+-->
+</body>
+</html>
